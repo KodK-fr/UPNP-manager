@@ -1,0 +1,19 @@
+{
+    "port": 8080,
+    "upnp_enabled": false,
+    "auto_start": false,
+    "theme": "light",
+    "max_file_size": 50,
+    "allowed_extensions": [
+        ".html",
+        ".css",
+        ".js",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".gif",
+        ".ico"
+    ],
+    "last_directory": "C:\\Users\\Utilisateur",
+    "window_geometry": "1000x700+668+130"
+}
