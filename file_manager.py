@@ -2,6 +2,7 @@ import os
 import shutil
 import logging
 from datetime import datetime
+import mimetypes
 
 class FileManager:
     def __init__(self, upload_dir='uploaded_files'):
@@ -11,13 +12,26 @@ class FileManager:
             if not os.path.exists(directory):
                 os.makedirs(directory)
 
-    def upload_file(self, file_path, max_size_mb=50, allowed_extensions=None):
-        """Télécharger un fichier."""
+    def is_valid_mime(self, file_path, allowed_mimes):
+        mime_type, _ = mimetypes.guess_type(file_path)
+        return mime_type in allowed_mimes
+
+    def upload_file(self, file_path, max_size_mb=50, allowed_extensions=None, allowed_mimes=None):
+        """Télécharger un fichier avec vérification MIME."""
         if allowed_extensions is None:
             allowed_extensions = ['.html', '.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.ico']
+        if allowed_mimes is None:
+            allowed_mimes = [
+                'text/html', 'text/css', 'application/javascript',
+                'image/png', 'image/jpeg', 'image/gif', 'image/x-icon'
+            ]
 
         if not any(file_path.lower().endswith(ext) for ext in allowed_extensions):
             raise ValueError(f"File type not allowed. Allowed: {', '.join(allowed_extensions)}")
+
+        if not self.is_valid_mime(file_path, allowed_mimes):
+            mime_type, _ = mimetypes.guess_type(file_path)
+            raise ValueError(f"Type MIME non autorisé : {mime_type}")
 
         if os.path.getsize(file_path) > max_size_mb * 1024 * 1024:
             raise ValueError(f"File size exceeds {max_size_mb} MB")
